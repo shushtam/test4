@@ -35,9 +35,8 @@
                     <div class="collapse navbar-collapse" id="app-navbar-collapse">
                         <!-- Left Side Of Navbar -->
                         <ul class="nav navbar-nav">
-                            <li><a href="#">Page 1</a></li>
-                            <li><a href="#">Page 2</a></li>
-                            <li><a href="#">Page 3</a></li>
+                            <li><a href="<?= URL::to('user') ?>">Users</a></li>
+                            <li><a href="<?= URL::to('user/report') ?>">Reports</a></li>
                         </ul>
 
                         <!-- Right Side Of Navbar -->

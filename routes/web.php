@@ -18,6 +18,9 @@ Route::get('/', function () {
 Route::get('/test', function () {
     return view('test');
 });
+Route::get('/test2', function () {
+    return view('test2');
+});
 
 
 
@@ -35,12 +38,14 @@ Route::group(['prefix' => 'user'], function () {
     Route::post('/register', 'UserController@postRegister');
     Route::get('/logout', 'UserController@logout');
     Route::post('/logout', 'UserController@logout');
+    Route::get('/report', 'UserController@showReport');
     Route::get('/', 'UserController@showList')->middleware('login')->middleware('role');
-    Route::post('/', 'UserController@showList')->middleware('login')->middleware('role');
+    //Route::post('/', 'UserController@showList')->middleware('login')->middleware('role');
     Route::get('{id}', 'UserController@showEdit');
     Route::post('{id}', 'UserController@showEdit');
     Route::get('{id}/edit', 'UserController@showEdit');
     Route::post('{id}/edit', 'UserController@postEdit');
+    
 
 
     

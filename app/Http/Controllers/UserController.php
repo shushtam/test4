@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Product;
+use App\Models\Report;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use App\Http\Requests\User\PostRegister;
 use Auth;
+use DB;
 
 class UserController extends Controller {
 
@@ -54,8 +56,6 @@ class UserController extends Controller {
 
     public function showList(\App\Http\Requests\User\PostList $request) {
         $userGroupedArr = new User();
-
-
         if ($request->has('name') && $request->has('email')) {
             $userFilter = $userGroupedArr->where('name', 'like', '%' . $request->input('name') . '%')
                     ->where('email', 'like', '%' . $request->input('email') . '%');
@@ -73,7 +73,7 @@ class UserController extends Controller {
         $request->flash();
         return \View::make('list', [
                     'userArr' => $userArr,
-                    'selectedrole'=>$request->input('role')
+                    'selectedrole' => $request->input('role')
         ]);
     }
 
@@ -102,8 +102,36 @@ class UserController extends Controller {
                 ->update(['user_id' => $request->input('user_id')]);
     }
 
-    public function postSearch(Request $request) {
-        
+    public function showReport(Request $request) {
+        $userFilter = Report::select('users.*', 'reports.user_id', DB::raw('MAX(reports.created_at) as report_date'), DB::raw('SUM(reports.value) as total_values')
+                )
+                ->rightJoin('users', 'reports.user_id', '=', 'users.id')
+                ->groupBy('users.id', DB::raw('MONTH(reports.created_at)'));
+        //$userFilter->having('total_values','=','')->update(['total_values'=>'0']);
+        if ($request->has('name')) {
+            $userFilter->where('name', 'like', '%' . $request->input('name') . '%');
+        }
+        if ($request->has('email')) {
+            $userFilter->where('email', 'like', '%' . $request->input('email') . '%');
+        }
+        if ($request->has('min_value')) {
+            $userFilter->having('total_values', '>', $request->input('min_value'));
+        }
+        if ($request->has('max_value')) {
+            $userFilter->having('total_values', '<', $request->input('max_value'));
+        }
+        if ($request->has('role')) {
+            $userFilter->where('role', $request->input('role'));
+        }
+        $userFilter = $userFilter->get();
+        $userArr = new \Illuminate\Pagination\LengthAwarePaginator(array_slice($userFilter->toArray(), \Request::get('page', 0) * 15, 15), count($userFilter), 15);
+        $userArr->setPath('report');
+        $request->flash();
+        return \View::make('reports', [
+                    'userGroupedArr' => $userArr,
+                    'selectedrole' => $request->input('role')
+        ]);
+        // return view('reports', ['userGroupedArr' => $userGroupedArr]);
     }
 
 }

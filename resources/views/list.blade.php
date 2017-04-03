@@ -6,7 +6,7 @@
     <div class="row" >
         <div class="col-md-2" style="background-color: rgb(217, 217, 217);border-radius: 5px;padding: 30px;">
             <ul class="nav nav-pills nav-stacked">
-                <?= Form::open(array('url' => 'user', 'class' => 'form-horizontal', 'role' => 'form')) ?>
+                <?= Form::open(array('method'=>'get', 'url' => 'user', 'class' => 'form-horizontal', 'role' => 'form')) ?>
                 <?= csrf_field() ?>
                 <li class="page-header"><h2>Search</h2></li>
                 <div class="form-group<?= $errors->has('name') ? ' has-error' : '' ?>">
@@ -88,7 +88,7 @@
                         </tbody>
                     </table>
                 </div>
-                <?= $userArr->render(); ?>
+                <?= $userArr->appends(Request::only('name','email','role'))->render(); ?>
             </div>
         </div>
 
