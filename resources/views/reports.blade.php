@@ -30,15 +30,21 @@
                         </span>
                     <?php endif; ?>
                 </div>
-                <div class="form-group">
+                <div class="form-group<?= $errors->has('role') ? ' has-error' : '' ?>">
                     <li>
                         <?= Form::label('role', 'Role:') ?>
                         <?= Form::select('role', ['' => 'Select Role'] + App\Models\User::getRoleList(), old('role'), ['class' => 'form-control', 'style' => 'margin-bottom:80px']) ?>
                     </li>
+                    <?php if ($errors->has('role')): ?>
+                        <span class="help-block">
+                            <strong><?= $errors->first('role') ?></strong>
+                        </span>
+                    <?php endif; ?>
+
                 </div>
                 <div class="form-group<?= $errors->has('min_value') ? ' has-error' : '' ?>">
                     <li>
-                        <?= Form::label('minvalue', 'From:') ?>
+                        <?= Form::label('min_value', 'From:') ?>
                         <?= Form::input('number', 'min_value', old('min_value'), ['class' => 'form-control']) ?>
                     </li>
                     <?php if ($errors->has('min_value')): ?>
@@ -49,7 +55,7 @@
                 </div>
                 <div class="form-group<?= $errors->has('max_value') ? ' has-error' : '' ?>">
                     <li>
-                        <?= Form::label('maxvalue', 'To:') ?>
+                        <?= Form::label('max_value', 'To:') ?>
                         <?= Form::input('number', 'max_value', old('max_value'), ['class' => 'form-control']) ?>
                     </li>
                     <?php if ($errors->has('max_value')): ?>
@@ -86,20 +92,12 @@
                         <tbody style="overflow: visible">
                             <?php foreach ($userGroupedArr as $userObj): ?>
                                 <tr style="overflow: visible" data-user-id="<?= $userObj['id'] ?>">
-                                    <td><?= $userObj['id']?></td>
+                                    <td><?= $userObj['id'] ?></td>
                                     <td><?= $userObj['name'] ?></td>
                                     <td><?= $userObj['email'] ?></td>
                                     <td><?= $userObj['role'] ?></td>
-                                    <?php if ($userObj['total_values'] == '') : ?>
-                                        <td>0</td>
-                                    <?php else : ?>
-                                        <td><?= $userObj['total_values'] ?></td>
-                                    <?php endif; ?>
-                                    <?php if ($userObj['report_date'] == '') : ?>
-                                        <td>0</td>
-                                    <?php else : ?>
-                                        <td><?= $userObj['report_date'] ?></td>
-                                    <?php endif; ?>
+                                    <td><?= $userObj['total_values'] == '' ? '0' : $userObj['total_values'] ?></td>
+                                    <td><?= $userObj['report_date'] == '' ? '0' : $userObj['report_date'] ?></td>
                                 </tr>
                             <?php endforeach; ?>
 
@@ -108,7 +106,7 @@
                     </table>
                 </div>
             </div>
-            <?= $userGroupedArr->appends(Request::only('name', 'email', 'role', 'min_value', 'max_value'))->render(); ?>
+            <?= $userGroupedArr->appends(Request::only('name', 'email', 'role', 'min_value', 'max_value', 'total_values'))->render(); ?>
         </div>
     </div>
 </div>

@@ -102,11 +102,11 @@ class UserController extends Controller {
                 ->update(['user_id' => $request->input('user_id')]);
     }
 
-    public function showReport(Request $request) {
+    public function showReport(\App\Http\Requests\User\ShowReport $request) {
         $userFilter = Report::select('users.*', 'reports.user_id', DB::raw('MAX(reports.created_at) as report_date'), DB::raw('SUM(reports.value) as total_values')
                 )
                 ->rightJoin('users', 'reports.user_id', '=', 'users.id')
-                ->groupBy('users.id', DB::raw('MONTH(reports.created_at)'));
+                ->groupBy('users.id', DB::raw('YEAR(reports.created_at)'), DB::raw('WEEK(reports.created_at)'));
         //$userFilter->having('total_values','=','')->update(['total_values'=>'0']);
         if ($request->has('name')) {
             $userFilter->where('name', 'like', '%' . $request->input('name') . '%');
@@ -120,6 +120,7 @@ class UserController extends Controller {
         if ($request->has('max_value')) {
             $userFilter->having('total_values', '<', $request->input('max_value'));
         }
+        
         if ($request->has('role')) {
             $userFilter->where('role', $request->input('role'));
         }
@@ -128,8 +129,7 @@ class UserController extends Controller {
         $userArr->setPath('report');
         $request->flash();
         return \View::make('reports', [
-                    'userGroupedArr' => $userArr,
-                    'selectedrole' => $request->input('role')
+                    'userGroupedArr' => $userArr
         ]);
         // return view('reports', ['userGroupedArr' => $userGroupedArr]);
     }

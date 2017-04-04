@@ -4,16 +4,15 @@ namespace App\Http\Requests\User;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ShowReport extends FormRequest
-{
+class ShowReport extends FormRequest {
+
     /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
      */
-    public function authorize()
-    {
-        return false;
+    public function authorize() {
+        return true;
     }
 
     /**
@@ -21,14 +20,17 @@ class ShowReport extends FormRequest
      *
      * @return array
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             //
             'email' => 'sometimes|nullable|email',
-            'role' => 'in:' . implode(',', array_keys(\App\Models\User::getRoleList())),
-            'min_value'=>'float',
-            'max_value'=>'float'
+            'role' => 'sometimes|nullable|in:' . implode(',', array_keys(\App\Models\User::getRoleList())),
+            /*'role' => [
+                \Illuminate\Validation\Rule::in(array_keys(\App\Models\User::getRoleList()) + ['']),
+            ],*/
+            'min_value' => 'sometimes|nullable|numeric',
+            'max_value' => 'sometimes|nullable|numeric'
         ];
     }
+
 }

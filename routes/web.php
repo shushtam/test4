@@ -21,7 +21,18 @@ Route::get('/test', function () {
 Route::get('/test2', function () {
     return view('test2');
 });
-
+Route::get('/test2', function () {
+    return view('test2');
+});
+Route::get('/sin', function () {
+    return view('sin');
+});
+Route::get('/cos', function () {
+    return view('cos');
+});
+Route::get('/image', function () {
+    return view('image');
+});
 
 
 
@@ -38,8 +49,8 @@ Route::group(['prefix' => 'user'], function () {
     Route::post('/register', 'UserController@postRegister');
     Route::get('/logout', 'UserController@logout');
     Route::post('/logout', 'UserController@logout');
-    Route::get('/report', 'UserController@showReport');
     Route::get('/', 'UserController@showList')->middleware('login')->middleware('role');
+    Route::get('/report', 'UserController@showReport');
     //Route::post('/', 'UserController@showList')->middleware('login')->middleware('role');
     Route::get('{id}', 'UserController@showEdit');
     Route::post('{id}', 'UserController@showEdit');

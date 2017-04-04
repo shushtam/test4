@@ -1,5 +1,8 @@
+@extends('layouts.app')
+
+@section('content')
 <!DOCTYPE html>
-<html lang="{{ config('app.locale') }}">
+<html lang="<?= config('app.locale') ?>">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -12,13 +15,16 @@
 
         <!-- Styles -->
         <style>
+
             html, body {
                 background-color: #fff;
-                color: #636b6f;
                 font-family: 'Raleway', sans-serif;
                 font-weight: 100;
                 height: 100vh;
                 margin: 0;
+            }
+            a {
+                font-family:  sans-serif;
             }
 
             .full-height {
@@ -69,32 +75,31 @@
             @if (Route::has('login'))
             <div class="top-right links">
                 @if (Auth::check())
-                <a href="{{ url('/home') }}">Home</a>
+                <a href="<?= url('/home') ?>">Home</a>
                 @else
-                <a href="{{ url('/login') }}">Login</a>
-                <a href="{{ url('/register') }}">Register</a>
+                <a href="<?= url('/login') ?>">Login</a>
+                <a href="<?= url('/register') ?>">Register</a>
                 @endif
             </div>
             @endif
 
             <div class="content">
                 <div>
-                    <a href="{{ URL::to('user/login') }}">Login</a>
-                    <a href="{{ URL::to('user/register') }}">Register</a>
-                    <a href="{{ URL::to('user') }}">See all users</a>
+                    <a class="btn btn-info" href="<?= URL::to('user/login') ?>">Login</a>
+                    <a class="btn btn-success"href="<?= URL::to('user/register') ?>">Register</a>
+                    <a class="btn btn-warning"href="<?= URL::to('user') ?>">See all users</a>
                 </div>
                 <div class="title m-b-md">
                     Laravel
                 </div>
 
                 <div class="links">
-                    <a href="https://laravel.com/docs">Documentation</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
-                    <a href="https://forge.laravel.com">Forge</a>
-                    <a href="https://github.com/laravel/laravel">GitHub</a>
+                   <a href="<?= URL::to('sin') ?>">sin</a>
+                   <a href="<?= URL::to('cos') ?>">cos</a>
+                   <a href="<?= URL::to('image') ?>">image</a>
                 </div>
             </div>
         </div>
     </body>
 </html>
+@endsection
