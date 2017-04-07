@@ -33,6 +33,8 @@ Route::get('/cos', function () {
 Route::get('/image', function () {
     return view('image');
 });
+ Route::get('/img', 'UserController@imgParam');
+ Route::post('/img', 'UserController@imgParam');
 
 
 

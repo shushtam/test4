@@ -133,5 +133,17 @@ class UserController extends Controller {
         ]);
         // return view('reports', ['userGroupedArr' => $userGroupedArr]);
     }
+    
+     public function imgParam(Request $request) {
+     
+        if($request->ajax())
+        {
+            return 1;
+        }
+
+     
+    
+  
+    }
 
 }
