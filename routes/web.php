@@ -54,6 +54,8 @@ Route::group(['prefix' => 'user'], function () {
     Route::get('/', 'UserController@showList')->middleware('login')->middleware('role');
     Route::get('/report', 'UserController@showReport');
     //Route::post('/', 'UserController@showList')->middleware('login')->middleware('role');
+    Route::get('/reportchart', 'UserController@showReportChart');
+    Route::get('/chart/{id}', 'UserController@showUserReportChart');
     Route::get('{id}', 'UserController@showEdit');
     Route::post('{id}', 'UserController@showEdit');
     Route::get('{id}/edit', 'UserController@showEdit');

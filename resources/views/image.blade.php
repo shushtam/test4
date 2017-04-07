@@ -64,7 +64,7 @@
     <div class="content"></div>
 </div-->
     <div class="section sec0">Section</div>
-    <div class="div1"></div>
+    <div class="div1"><!--img src="images/Gear.png" width="50" height="50"/--></div>
     <div class="div2"></div>
     <div class="div3"></div>
     <div class="div4"></div>

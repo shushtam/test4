@@ -134,6 +134,45 @@ class UserController extends Controller {
         // return view('reports', ['userGroupedArr' => $userGroupedArr]);
     }
     
+      public function showReportChart(Request $request) {
+        $userGroupedArr = new User();
+       /* if ($request->has('name') && $request->has('email')) {
+            $userFilter = $userGroupedArr->where('name', 'like', '%' . $request->input('name') . '%')
+                    ->where('email', 'like', '%' . $request->input('email') . '%');
+        } elseif ($request->has('name')) {
+            $userFilter = $userGroupedArr->where('name', 'like', '%' . $request->input('name') . '%');
+        } elseif ($request->has('email')) {
+            $userFilter = $userGroupedArr->where('email', 'like', '%' . $request->input('email') . '%');
+        } elseif ($request->has('role')) {
+            $userFilter = $userGroupedArr->where('role', $request->input('role'));
+        } else {
+            $userFilter = $userGroupedArr;
+        }*/
+        $userGroupedArr->get();
+        $userArr = $userGroupedArr->paginate(15);
+        $request->flash();
+        return \View::make('reportschart', [
+                    'userArr' => $userArr,
+                    'selectedrole' => $request->input('role')
+        ]);
+    }
+         public function showUserReportChart($id) {
+        $userArr = Report::select('users.*', 'reports.user_id', DB::raw('SUM(reports.value) as total_values')
+                )
+                ->rightJoin('users', 'reports.user_id', '=', 'users.id')
+                ->groupBy('users.id', DB::raw('MONTH(reports.created_at)'))
+                ->having('user_id','=',$id);
+        //$userFilter->having('total_values','=','')->update(['total_values'=>'0']);
+        $userArr = $userArr->get();
+        $user=User::find(1);
+        
+    
+        //$xx=$user->report()->groupBy(DB::raw('MONTH(reports.created_at)'))->get();
+        return \View::make('reportUserChart', [
+                    'userArr' => $userArr
+        ]);
+        // return view('reports', ['userGroupedArr' => $userGroupedArr]);
+    }
      public function imgParam(Request $request) {
      
         if($request->ajax())
