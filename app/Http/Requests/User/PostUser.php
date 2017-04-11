@@ -4,7 +4,7 @@ namespace App\Http\Requests\User;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class PostEdit extends FormRequest
+class PostUser extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,7 +26,7 @@ class PostEdit extends FormRequest
         return [
             //
             'name' => 'required|max:255|min:4',
-            'email' => 'required|email|max:255'
+            'email' => 'required|email|max:255|unique:users,email,'.$this->userId,
         ];
     }
 }

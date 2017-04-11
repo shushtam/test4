@@ -33,8 +33,8 @@ Route::get('/cos', function () {
 Route::get('/image', function () {
     return view('image');
 });
- Route::get('/img', 'UserController@imgParam');
- Route::post('/img', 'UserController@imgParam');
+Route::get('/img', 'UserController@imgParam');
+Route::post('/img', 'UserController@imgParam');
 
 
 
@@ -55,19 +55,23 @@ Route::group(['prefix' => 'user'], function () {
     Route::get('/report', 'UserController@showReport');
     //Route::post('/', 'UserController@showList')->middleware('login')->middleware('role');
     Route::get('/reportchart', 'UserController@showReportChart');
-    Route::get('/chart/{id}', 'UserController@showUserReportChart');
+    Route::get('/chart', 'UserController@showReportChart');
     Route::get('{id}', 'UserController@showEdit');
     Route::post('{id}', 'UserController@showEdit');
     Route::get('{id}/edit', 'UserController@showEdit');
     Route::post('{id}/edit', 'UserController@postEdit');
-    
-
-
-    
 });
 
-    Route::post('/change', 'UserController@postChange');
-    Route::get('/change', 'UserController@postChange');
+Route::post('/change', 'UserController@postChange');
+Route::get('/change', 'UserController@postChange');
+
+
+
+
+Route::get('/users', 'UserController@getUsers');
+Route::post('/users', 'UserController@getUsers');
+Route::get('/getusers', 'UserController@getUser');
+Route::post('/postusers', 'UserController@postUser');
 
 
 

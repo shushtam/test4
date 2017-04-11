@@ -4,7 +4,7 @@ namespace App\Http\Requests\User;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class PostEdit extends FormRequest
+class ShowReportChart extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,8 +25,7 @@ class PostEdit extends FormRequest
     {
         return [
             //
-            'name' => 'required|max:255|min:4',
-            'email' => 'required|email|max:255'
+           'year' => 'numeric|min:1970|max:2023',
         ];
     }
 }

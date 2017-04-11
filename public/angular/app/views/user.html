@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+          
+            label {
+                margin-top: 20px;
+            }
+        </style>
+    </head>
+    <body>
+        <div ng-app="angtestApp" ng-controller="UserCtrl"  >
+            <form   name="myform" novalidate ng-submit="myform.$valid && submit()">
+                <label for="name">Name</label>
+                <input class="form-control" type="text" name="name" ng-model="Name" ng-value="{{Name}}" required minlength="4" maxlength="255">
+                <p>
+                <span ng-show="myform.name.$invalid">Wrong name.</span>
+                <span ng-show="myform.name.$error.minlength">Must be at least 4 characters.</span>
+                <span ng-show="myform.name.$error.maxlength">Can't be more than 255 characters.</span>
+                </p>
+                <label for="email">Email</label>
+                <input class="form-control" type="email" name="email"  ng-model="Email" ng-value="{{Email}}" required maxlength="255">
+                <p>
+                <span ng-show="myform.email.$invalid">Wrong email.</span>
+                <span ng-show="myform.email.$error.email">Invalid email address.</span>
+                <span ng-show="myform.name.$error.maxlength">Can't be more than 255 characters.</span>
+                </p>
+                <input type="submit" value="change" class="btn btn-success">
+
+            </form>
+            <table  class="table table-hover" >
+
+                <tr  ng-repeat="(key, value) in error">
+                    <td>{{value}}</td>
+                </tr>
+
+            </table>
+        </div>
+    </body>
+</html>

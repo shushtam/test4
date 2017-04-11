@@ -120,7 +120,7 @@ class UserController extends Controller {
         if ($request->has('max_value')) {
             $userFilter->having('total_values', '<', $request->input('max_value'));
         }
-        
+
         if ($request->has('role')) {
             $userFilter->where('role', $request->input('role'));
         }
@@ -133,56 +133,62 @@ class UserController extends Controller {
         ]);
         // return view('reports', ['userGroupedArr' => $userGroupedArr]);
     }
-    
-      public function showReportChart(Request $request) {
-        $userGroupedArr = new User();
-       /* if ($request->has('name') && $request->has('email')) {
-            $userFilter = $userGroupedArr->where('name', 'like', '%' . $request->input('name') . '%')
-                    ->where('email', 'like', '%' . $request->input('email') . '%');
-        } elseif ($request->has('name')) {
-            $userFilter = $userGroupedArr->where('name', 'like', '%' . $request->input('name') . '%');
-        } elseif ($request->has('email')) {
-            $userFilter = $userGroupedArr->where('email', 'like', '%' . $request->input('email') . '%');
-        } elseif ($request->has('role')) {
-            $userFilter = $userGroupedArr->where('role', $request->input('role'));
-        } else {
-            $userFilter = $userGroupedArr;
-        }*/
-        $userGroupedArr->get();
-        $userArr = $userGroupedArr->paginate(15);
+
+    public function showReportChart(\App\Http\Requests\User\ShowReportChart $request) {
+        $user = new User();
+        $start_month = $request->input('start_month') + 1;
+        $end_month = $request->input('end_month') + 1;
+        $userArr = Report::select('users.*', 'reports.user_id', DB::raw('SUM(reports.value) as total_values'), DB::raw('MONTH(reports.created_at) as month'), DB::raw('YEAR(reports.created_at) as year'))
+                ->rightJoin('users', 'reports.user_id', '=', 'users.id')
+                ->groupBy('users.id', DB::raw('YEAR(reports.created_at)'), DB::raw('MONTH(reports.created_at)'))
+                ->having('user_id', '=', $request->input('user'))
+                ->having('year', '=', $request->input('year'))
+                ->having('month', '>=', $start_month)
+                ->having('month', '<=', $end_month);
+        $userArr = $userArr->get();
+        $user = $user->pluck('name', 'id');
         $request->flash();
         return \View::make('reportschart', [
                     'userArr' => $userArr,
-                    'selectedrole' => $request->input('role')
+                    'user' => $user,
+                    'start' => $start_month,
+                    'end' => $end_month
         ]);
     }
-         public function showUserReportChart($id) {
-        $userArr = Report::select('users.*', 'reports.user_id', DB::raw('SUM(reports.value) as total_values')
-                )
-                ->rightJoin('users', 'reports.user_id', '=', 'users.id')
-                ->groupBy('users.id', DB::raw('MONTH(reports.created_at)'))
-                ->having('user_id','=',$id);
-        //$userFilter->having('total_values','=','')->update(['total_values'=>'0']);
-        $userArr = $userArr->get();
-        $user=User::find(1);
-        
-    
-        //$xx=$user->report()->groupBy(DB::raw('MONTH(reports.created_at)'))->get();
-        return \View::make('reportUserChart', [
-                    'userArr' => $userArr
-        ]);
-        // return view('reports', ['userGroupedArr' => $userGroupedArr]);
-    }
-     public function imgParam(Request $request) {
-     
-        if($request->ajax())
-        {
+
+    public function imgParam(Request $request) {
+
+        if ($request->ajax()) {
             return 1;
         }
+    }
 
-     
-    
-  
+    public function getUsers(Request $request) {
+        $user = new User();
+        $user = $user->get();
+        $user = json_encode($user);
+        return $user;
+    }
+
+    public function getUser(Request $request) {
+        $id=$request->userId;
+        $user = User::find( $id);
+       // $user = json_encode($user);
+        //  if (strcmp($user->email,$request->userEmail) == 0) {
+        return response()->json(['dt' => $user]);
+    }
+      public function postUser(\App\Http\Requests\User\PostUser $request) {
+        $id=$request->userId;
+        $user = User::find( $id);
+        if ($request->has('email')) {
+            User::where('id', $id)
+                    ->update(['email' => $request->email]);
+        }
+        if ($request->has('name')) {
+            User::where('id', $id)
+                    ->update(['name' => $request->name]);
+        }
+        return response()->json(['dt' => $user]);
     }
 
 }

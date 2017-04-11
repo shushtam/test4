@@ -6,35 +6,36 @@
     <div class="row" >
         <div class="col-md-2" style="background-color: rgb(217, 217, 217);border-radius: 5px;padding: 30px;">
             <ul class="nav nav-pills nav-stacked">
-                <?= Form::open(array('method'=>'get', 'url' => 'user', 'class' => 'form-horizontal', 'role' => 'form')) ?>
+                <?= Form::open(array('method' => 'get', 'url' => 'user/chart', 'class' => 'form-horizontal', 'role' => 'form')) ?>
                 <?= csrf_field() ?>
                 <li class="page-header"><h2>Search</h2></li>
-                <div class="form-group<?= $errors->has('name') ? ' has-error' : '' ?>">
+                <div class="form-group<?= $errors->has('year') ? ' has-error' : '' ?>">
                     <li>
-                        <?= Form::label('name', 'Name:') ?>
-                        <?= Form::input('text', 'name', old('name'), ['class' => 'form-control']) ?>
+                        <?= Form::label('year', 'Year:') ?>
+                        <?= Form::input('number', 'year', old('year'), ['class' => 'form-control']) ?>
                     </li>
-                    <?php if ($errors->has('name')): ?>
+                    <?php if ($errors->has('year')): ?>
                         <span class="help-block">
-                            <strong><?= $errors->first('name') ?></strong>
-                        </span>
-                    <?php endif; ?>
-                </div>
-                <div class="form-group<?= $errors->has('email') ? ' has-error' : '' ?>">
-                    <li>
-                        <?= Form::label('email', 'Email:') ?>
-                        <?= Form::input('email', 'email', old('email'), ['class' => 'form-control']) ?>
-                    </li>
-                    <?php if ($errors->has('email')): ?>
-                        <span class="help-block">
-                            <strong><?= $errors->first('email') ?></strong>
+                            <strong><?= $errors->first('year') ?></strong>
                         </span>
                     <?php endif; ?>
                 </div>
                 <div class="form-group">
                     <li>
-                        <?= Form::label('role', 'Role:') ?>
-                        <?= Form::select('role', App\Models\User::getRoleList(), old('role'), ['class' => 'form-control', 'style' => 'margin-bottom:80px']) ?>
+                        <?= Form::label('start_month', 'From:') ?>
+                        <?= Form::select('start_month', ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], old('start_month'), ['class' => 'form-control', 'style' => 'margin-bottom:80px']) ?>
+                    </li>
+                </div>
+                <div class="form-group">
+                    <li>
+                        <?= Form::label('end_month', 'To:') ?>
+                        <?= Form::select('end_month', ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], old('end_month'), ['class' => 'form-control', 'style' => 'margin-bottom:80px']) ?>
+                    </li>
+                </div>
+                <div class="form-group">
+                    <li>
+                        <?= Form::label('user', 'User:') ?>
+                        <?= Form::select('user', $user, old('user'), ['class' => 'form-control', 'style' => 'margin-bottom:80px']) ?>
                     </li>
                 </div>
                 <div class="form-group">
@@ -45,42 +46,15 @@
                 <?= Form::close() ?>
             </ul>
         </div>
-        <div class="col-md-10 ">
+        <div class="col-md-5 ">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h2>All users</h2>
+                    <h2>Chart</h2>
                 </div>
                 <div class="panel-body">
-                    <table style="overflow: visible" border="1" class="table table-hover usersTable" >
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Role</th>
-                                <th>Chart</th>
-                            </tr>
-                        </thead>
-                        <tbody style="overflow: visible">
-
-
-
-                            <?php foreach ($userArr as $userObj): ?>
-                                <tr style="overflow: visible" data-user-id="<?= $userObj->id ?>">
-                                    <td><?= $userObj->id ?></td>
-                                    <td><?= $userObj->name ?></td>
-                                    <td><?= $userObj->email ?></td>
-                                    <td><?= $userObj->role ?></td>
-                                    <td><a href="<?= URL::to('user/chart', $userObj->id) ?>">see chart</a></td>
-
-                                </tr>
-                            <?php endforeach; ?>
-
-
-                        </tbody>
-                    </table>
+                    <canvas id="myChart" width="400" height="400"></canvas>
                 </div>
-                <?= $userArr->appends(Request::only('name','email','role'))->render(); ?>
+
             </div>
         </div>
 
@@ -88,8 +62,75 @@
 </div>
 @endsection
 
+
 @section('js')
 <script>
-</script>
+    var arr = <?= $userArr ?>;
+    var start =<?= $start ?>;
+    var end =<?= $end ?>;
+    var monthData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    for (i in arr) {
+        for (var j = 1; j < 13; j++) {
+            if (arr[i]["month"] == j) {
+                index = j - 1;
+                monthData[index] = arr[i]["total_values"];
+            }
+        }
+    }
+    var months = monthData.slice(start - 1, end);
+    var labels = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    var labelMonth = labels.slice(start - 1, end);
+    var ctx = document.getElementById("myChart");
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labelMonth,
+            datasets: [{
+                    label: '# Value',
+                    data: months,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)',
+                        'rgba(255, 159, 64, 0.2)',
+                        'rgba(255, 159, 64, 0.2)',
+                        'rgba(255, 159, 64, 0.2)',
+                        'rgba(255, 159, 64, 0.2)',
+                        'rgba(255, 159, 64, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255,99,132,1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)',
+                        'rgba(255, 159, 64, 1)',
+                        'rgba(255, 159, 64, 1)',
+                        'rgba(255, 159, 64, 1)',
+                        'rgba(255, 159, 64, 1)',
+                        'rgba(255, 159, 64, 1)',
+                        'rgba(255, 159, 64, 1)'
 
+                    ],
+                    borderWidth: 1
+                }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+            }
+        }
+    });
+
+
+</script>
 @endsection

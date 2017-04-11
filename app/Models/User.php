@@ -35,6 +35,9 @@ class User extends Authenticatable {
     public function report() {
         return $this->hasMany('App\Models\Report');
     }
+     public function tasks() {
+        return $this->belongsToMany('App\Models\Task');
+    }
 
     const ROLE_MANAGER = 'manager';
     const ROLE_USER = 'user';
