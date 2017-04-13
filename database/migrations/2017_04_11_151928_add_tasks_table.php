@@ -4,18 +4,24 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddTasksTable extends Migration
-{
+class AddTasksTable extends Migration {
+
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up()
-    {
+    public function up() {
         Schema::table('tasks', function (Blueprint $table) {
             //
-           
+            for ($i = 0; $i < 20; $i++) {
+                $desc = $this->randomString();
+                \DB::table('tasks')->insert(
+                        [
+                            'description' => $desc,
+                        ]
+                );
+            }
         });
     }
 
@@ -24,12 +30,12 @@ class AddTasksTable extends Migration
      *
      * @return void
      */
-    public function down()
-    {
+    public function down() {
         Schema::table('tasks', function (Blueprint $table) {
             //
         });
     }
+
     private function randomString() {
         $str = "";
         $characters = array_merge(range('A', 'Z'), range('a', 'z'), range('0', '9'));
@@ -40,4 +46,5 @@ class AddTasksTable extends Migration
         }
         return $str;
     }
+
 }

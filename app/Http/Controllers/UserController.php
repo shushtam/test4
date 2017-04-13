@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Product;
 use App\Models\Report;
+use App\Models\Task;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -171,15 +172,16 @@ class UserController extends Controller {
     }
 
     public function getUser(Request $request) {
-        $id=$request->userId;
-        $user = User::find( $id);
-       // $user = json_encode($user);
+        $id = $request->userId;
+        $user = User::find($id);
+        // $user = json_encode($user);
         //  if (strcmp($user->email,$request->userEmail) == 0) {
         return response()->json(['dt' => $user]);
     }
-      public function postUser(\App\Http\Requests\User\PostUser $request) {
-        $id=$request->userId;
-        $user = User::find( $id);
+
+    public function postUser(\App\Http\Requests\User\PostUser $request) {
+        $id = $request->userId;
+        $user = User::find($id);
         if ($request->has('email')) {
             User::where('id', $id)
                     ->update(['email' => $request->email]);
@@ -189,6 +191,36 @@ class UserController extends Controller {
                     ->update(['name' => $request->name]);
         }
         return response()->json(['dt' => $user]);
+    }
+
+    public function getTasks() {
+        $tasks = Task::with('users')->get()->keyBy('id')->toArray();
+        return response()->json(['dt' => $tasks]);
+    }
+
+    public function updateTasks(Request $request) {
+        DB::table('task_user')
+                ->where('user_id', $request->user_id)
+                ->where('task_id', $request->task_id)
+                ->update(['task_id' => $request->newtask_id]);
+        return response()->json(['dt' => 'ok']);
+    }
+
+    public function addTask(Request $request) {
+        $data = [];
+        for ($i = 0; $i < count($request->users); $i++) {
+            $data[] = ['user_id' => $request->users[$i], 'task_id' => $request->task_id];
+        }
+        DB::table('task_user')->insert($data);
+        return response()->json(['dt' => 'ok']);
+    }
+
+    public function removeUser(Request $request) {
+        DB::table('task_user')
+                ->where('user_id', $request->userId)
+                ->where('task_id', $request->task_id)
+                ->delete();
+        return response()->json(['dt' => 'ok']);
     }
 
 }

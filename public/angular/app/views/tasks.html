@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div class="container" ng-app="angtestApp" ng-controller="TaskCtrl">
+            <div class="row">
+                <div class="col-md-10">
+                    <div class="panel panel-primary" ng-drop="true"  >
+                        <div class="panel-heading">Tasks</div>
+                        <div class="panel-body">
+                            <table class="table">
+                                <thead><tr><th>Tasks</th><th>Users</th></tr></thead>
+                                <tbody >
+                                    <tr ng-repeat="task in tasks"> <td> <a href="#!/taskdetails/{{task['id']}}"><h4 style="color: pink;">{{task.description}}</h4></a></td>
+                                        <td  
+                                            ng-drop="{{task.id}}"
+                                            ng-drop-success="onDropSuccess($data,$event,$target)">
+                                            <div
+                                                ng-drag="true" 
+                                                ng-drag-data="{{user}}"
+                                                ng-repeat="user in task.users"
+                                                data-user-id="{{user.id}}"
+                                                data-task-id="{{task.id}}"
+                                                style="margin-left: 40px; border:1px dashed yellow;">                              
+                                                {{user.name}}
+                                            </div> 
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>      
+            </div>
+        </div>
+</body>
+</html>

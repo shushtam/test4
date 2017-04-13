@@ -75,4 +75,10 @@ Route::post('/postusers', 'UserController@postUser');
 
 
 
+Route::get('/gettasks', 'UserController@getTasks');
+Route::post('/updatetasks', 'UserController@updateTasks');
+Route::post('/addtask', 'UserController@addTask');
+Route::get('/removeuser', 'UserController@removeUser');
+
+
 

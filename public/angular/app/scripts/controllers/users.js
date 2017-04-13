@@ -57,7 +57,6 @@ angular.module('angtestApp')
                     params: {userId: item},
                 }).then(function successCallback(response) {
                     user = angular.fromJson(response.data);
-                    ;
                     $scope.Name = response.data.dt.name;
                     $scope.Email = response.data.dt.email;
                     $scope.role = response.data.dt.role;

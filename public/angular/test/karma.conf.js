@@ -33,6 +33,12 @@ module.exports = function(config) {
       'bower_components/angular-touch/angular-touch.js',
       'bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
       'bower_components/angular-modal-service/dst/angular-modal-service.js',
+      'bower_components/jquery-ui/jquery-ui.js',
+      'bower_components/angular-dragdrop/src/angular-dragdrop.js',
+      'bower_components/ngDraggable/ngDraggable.js',
+      'bower_components/select2/select2.js',
+      'bower_components/angular-select2/dist/angular-select2.js',
+      'bower_components/angular-ui-select2/src/select2.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'app/scripts/**/*.js',

@@ -19,7 +19,11 @@ angular
     'ngSanitize',
     'ngTouch',
     'ui.bootstrap',
-    'angularModalService'
+    'angularModalService',
+    'ngDragDrop',
+    'ngDraggable',
+    'rt.select2',
+    'ui.select2'
   ])
   .config(function ($routeProvider) {
     $routeProvider
@@ -42,6 +46,16 @@ angular
         templateUrl: 'views/user.html',
         controller: 'UserCtrl',
         controllerAs: 'user'
+      })
+       .when('/tasks', {
+        templateUrl: 'views/tasks.html',
+        controller: 'TaskCtrl',
+        controllerAs: 'task'
+      })
+        .when('/taskdetails/:taskid', {
+        templateUrl: 'views/task_details.html',
+        controller: 'TaskDetailsCtrl',
+        controllerAs: 'taskdetails'
       })
       .otherwise({
         redirectTo: '/'

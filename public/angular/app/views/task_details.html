@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            h3 {
+                color: maroon;
+            }
+            .select {
+                width: 50%;
+            }
+            .option div {
+                min-height:0 !important;
+                padding: 0 !important;
+            }
+            .select_error {
+                color: red;
+                margin-top: 10px;
+                visibility: hidden;
+
+            }
+            .select_visible {
+                visibility: visible;
+            }
+            .user {
+                width: 50%;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-10">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">Task No {{task.id}} </div>
+                        <div class="panel-body text-center">
+                            <h3>Task name</h3>
+                            {{task.description}}  
+                            <h3>Task details</h3>
+                            {{task.description}}
+                            <h3>Task start date</h3>
+                            <p ng-if="task.created_at == null">2017-10-20</p>
+                            <p ng-if="task.created_at != null">{{task.created_at}}</p>
+                            <h3>Task end date</h3>
+                            <p ng-if="task.updated_at == null">2017-10-21</p>
+                            <p ng-if="task.updated_at != null">{{task.updated_at}}</p>
+                            <div class="well text-left">
+                                <h4>Users in this task</h4>
+                                <div ng-repeat="user in task.users track by $index"
+                                     class="alert alert-warning alert-dismissable user">
+                                    <a  ng-click="removeUser(user.id)" class="close" data-dismiss="alert" aria-label="close">×</a>
+                                    {{user.name}}
+                                </div>
+                            </div>
+                            <h4>Add other users</h4>
+                            <select class="select" ui-select2="select2Options" ng-model="select_user" ng-change="change()" data-placeholder="pick a user" multiple>
+                                <option value=""></option>
+                                <option class="option" ng-repeat="free_user in users track by $index" ng-value="{{free_user.id}}">{{free_user.name}}</option>
+                            </select>
+                            <input type="button" class="btn btn-warning" value="add" ng-click="addUsers()">
+                            <div class="select_error">Pick someone</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
